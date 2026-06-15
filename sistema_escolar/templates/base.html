@@ -5,8 +5,51 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{% block title %}Sistema Escolar{% endblock %}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/app.css') }}">
+    <style>
+        .navbar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+            margin-bottom: 1rem;
+        }
+        
+        .navbar-user {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .logout-button {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            text-decoration: none;
+            transition: background 0.2s;
+        }
+        
+        .logout-button:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+    </style>
 </head>
 <body>
+    {% if session.usuario %}
+    <div class="navbar">
+        <span>Sistema Escolar</span>
+        <div class="navbar-user">
+            <span>{{ session.usuario }}</span>
+            <a href="{{ url_for('logout') }}" class="logout-button">Sair</a>
+        </div>
+    </div>
+    {% endif %}
+    
     <div class="page-shell">
         <header class="hero">
             <div>

@@ -29,8 +29,7 @@ def create_app(db_path: str = "dados/alunos.json") -> Flask:
             return f(*args, **kwargs)
         return decorated_function
 
-    def montar_estatisticas() -> dict[str, float | int]:
-        alunos = sistema.listar_alunos()
+    def montar_estatisticas(alunos) -> dict[str, float | int]:
         total_alunos = len(alunos)
         aprovados = sum(1 for aluno in alunos if aluno.situacao == "Aprovado")
         media_geral = round(mean([aluno.media for aluno in alunos]), 2) if alunos else 0.0
@@ -92,7 +91,7 @@ def create_app(db_path: str = "dados/alunos.json") -> Flask:
             return redirect(url_for("index"))
 
         alunos = sistema.listar_alunos()
-        estatisticas = montar_estatisticas()
+        estatisticas = montar_estatisticas(alunos)
         return render_template(
             "index.html",
             alunos=alunos,

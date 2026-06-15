@@ -93,13 +93,15 @@
                 </thead>
                 <tbody>
                     {% for aluno in alunos %}
+                        {% set media = aluno.media %}
+                        {% set situacao = aluno.situacao %}
                         <tr>
                             <td>{{ aluno.matricula }}</td>
                             <td>{{ aluno.nome }}</td>
-                            <td>{{ '%.2f'|format(aluno.media) }}</td>
+                            <td>{{ '%.2f'|format(media) }}</td>
                             <td>
-                                <span class="badge badge-{{ 'success' if aluno.situacao == 'Aprovado' else 'danger' }}">
-                                    {{ aluno.situacao }}
+                                <span class="badge badge-{{ 'success' if situacao == 'Aprovado' else 'danger' }}">
+                                    {{ situacao }}
                                 </span>
                             </td>
                             <td>

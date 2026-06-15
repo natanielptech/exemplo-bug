@@ -10,16 +10,82 @@ class SistemaEscolarWebTests(unittest.TestCase):
         self.temp_dir = tempfile.TemporaryDirectory()
         db_path = Path(self.temp_dir.name) / "alunos.json"
         self.app = create_app(str(db_path))
+        self.app.config["TESTING"] = True
         self.client = self.app.test_client()
 
     def tearDown(self) -> None:
         self.temp_dir.cleanup()
 
-    def test_index_renderiza(self) -> None:
-        response = self.client.get("/")
+    def login(self) -> None:
+        self.client.post(
+            "/login",
+            data={"usuario": "nataniel", "senha": "123"},
+            follow_redirects=False,
+        )
+
+    def test_rota_index_redireciona_para_login_sem_sessao(self) -> None:
+        response = self.client.get("/", follow_redirects=False)
+
+        self.assertEqual(response.status_code, 302)
+        self.assertIn("/login", response.headers["Location"])
+
+    def test_login_com_credenciais_invalidas(self) -> None:
+        response = self.client.post(
+            "/login",
+            data={"usuario": "invalido", "senha": "errada"},
+            follow_redirects=True,
+        )
 
         self.assertEqual(response.status_code, 200)
-        self.assertIn(b"Sistema Escolar", response.data)
+        self.assertIn("Usuário ou senha inválidos.".encode("utf-8"), response.data)
+
+    def test_index_renderiza_com_usuario_logado(self) -> None:
+        self.login()
+
+        response = self.client.get("/", follow_redirects=True)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("Sistema Escolar".encode("utf-8"), response.data)
+
+    def test_fluxo_cadastro_e_lancamento_de_nota(self) -> None:
+        self.login()
+
+        response_cadastro = self.client.post(
+            "/",
+            data={"acao": "cadastrar", "matricula": "001", "nome": "Ana"},
+            follow_redirects=True,
+        )
+        self.assertEqual(response_cadastro.status_code, 200)
+        self.assertIn("Aluno cadastrado com sucesso.".encode("utf-8"), response_cadastro.data)
+
+        response_nota = self.client.post(
+            "/",
+            data={"acao": "nota", "matricula_nota": "001", "nota": "8"},
+            follow_redirects=True,
+        )
+        self.assertEqual(response_nota.status_code, 200)
+        self.assertIn("Nota registrada com sucesso.".encode("utf-8"), response_nota.data)
+
+    def test_acao_invalida_exibe_erro(self) -> None:
+        self.login()
+
+        response = self.client.post(
+            "/",
+            data={"acao": "desconhecida"},
+            follow_redirects=True,
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("Acao invalida.".encode("utf-8"), response.data)
+
+    def test_logout_remove_sessao_e_bloqueia_index(self) -> None:
+        self.login()
+
+        self.client.get("/logout", follow_redirects=False)
+        response = self.client.get("/", follow_redirects=False)
+
+        self.assertEqual(response.status_code, 302)
+        self.assertIn("/login", response.headers["Location"])
 
 
 if __name__ == "__main__":

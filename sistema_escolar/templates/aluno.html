@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block title %}Detalhe do aluno | Sistema Escolar{% endblock %}
+
+{% block headline %}Detalhe do aluno{% endblock %}
+
+{% block subtitle %}Visao completa das informacoes cadastradas e das notas lancadas.{% endblock %}
+
+{% block content %}
+<section class="panel detail-layout">
+    <article>
+        <span class="section-label">Identificacao</span>
+        <h2>{{ aluno.nome }}</h2>
+        <p class="detail-line"><strong>Matricula:</strong> {{ aluno.matricula }}</p>
+        <p class="detail-line"><strong>Media:</strong> {{ '%.2f'|format(aluno.media) }}</p>
+        <p class="detail-line"><strong>Situacao:</strong> {{ aluno.situacao }}</p>
+    </article>
+
+    <article>
+        <span class="section-label">Notas</span>
+        {% if aluno.notas %}
+            <ul class="notes-list">
+                {% for nota in aluno.notas %}
+                    <li>{{ '%.1f'|format(nota) }}</li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p class="empty-state">Nenhuma nota lancada.</p>
+        {% endif %}
+    </article>
+</section>
+
+<div class="actions-row">
+    <a class="button-secondary" href="{{ url_for('index') }}">Voltar ao painel</a>
+</div>
+{% endblock %}

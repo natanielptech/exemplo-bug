@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+
+{% block title %}Painel | Sistema Escolar{% endblock %}
+
+{% block content %}
+<section class="stats-grid">
+    <article class="stat-card">
+        <span>Total de alunos</span>
+        <strong>{{ estatisticas.total_alunos }}</strong>
+    </article>
+    <article class="stat-card">
+        <span>Aprovados</span>
+        <strong>{{ estatisticas.aprovados }}</strong>
+    </article>
+    <article class="stat-card">
+        <span>Reprovados</span>
+        <strong>{{ estatisticas.reprovados }}</strong>
+    </article>
+    <article class="stat-card">
+        <span>Media geral</span>
+        <strong>{{ '%.2f'|format(estatisticas.media_geral) }}</strong>
+    </article>
+</section>
+
+<section class="panel-grid">
+    <article class="panel">
+        <div class="panel-head">
+            <div>
+                <span class="section-label">Cadastro</span>
+                <h2>Novo aluno</h2>
+            </div>
+        </div>
+        <form method="post" class="form-stack">
+            <input type="hidden" name="acao" value="cadastrar">
+            <label>
+                Matricula
+                <input type="text" name="matricula" placeholder="001" required>
+            </label>
+            <label>
+                Nome
+                <input type="text" name="nome" placeholder="Ana Silva" required>
+            </label>
+            <button type="submit">Cadastrar aluno</button>
+        </form>
+    </article>
+
+    <article class="panel">
+        <div class="panel-head">
+            <div>
+                <span class="section-label">Notas</span>
+                <h2>Lancar nota</h2>
+            </div>
+        </div>
+        <form method="post" class="form-stack">
+            <input type="hidden" name="acao" value="nota">
+            <label>
+                Aluno
+                <select name="matricula_nota" {% if not alunos %}disabled{% endif %} required>
+                    <option value="">Selecione um aluno</option>
+                    {% for aluno in alunos %}
+                        <option value="{{ aluno.matricula }}">{{ aluno.matricula }} - {{ aluno.nome }}</option>
+                    {% endfor %}
+                </select>
+            </label>
+            <label>
+                Nota
+                <input type="number" name="nota" min="0" max="10" step="0.1" placeholder="8.5" required>
+            </label>
+            <button type="submit" {% if not alunos %}disabled{% endif %}>Registrar nota</button>
+        </form>
+    </article>
+</section>
+
+<section class="panel">
+    <div class="panel-head">
+        <div>
+            <span class="section-label">Alunos</span>
+            <h2>Lista cadastrada</h2>
+        </div>
+    </div>
+
+    {% if alunos %}
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Matricula</th>
+                        <th>Nome</th>
+                        <th>Media</th>
+                        <th>Situacao</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for aluno in alunos %}
+                        <tr>
+                            <td>{{ aluno.matricula }}</td>
+                            <td>{{ aluno.nome }}</td>
+                            <td>{{ '%.2f'|format(aluno.media) }}</td>
+                            <td>
+                                <span class="badge badge-{{ 'success' if aluno.situacao == 'Aprovado' else 'danger' }}">
+                                    {{ aluno.situacao }}
+                                </span>
+                            </td>
+                            <td>
+                                <a class="text-link" href="{{ url_for('detalhe_aluno', matricula=aluno.matricula) }}">Ver detalhe</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <p class="empty-state">Nenhum aluno cadastrado ainda.</p>
+    {% endif %}
+</section>
+{% endblock %}

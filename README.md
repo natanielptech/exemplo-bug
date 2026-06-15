@@ -20,6 +20,18 @@ No terminal, na pasta do projeto:
 python -m sistema_escolar.cli
 ```
 
+Para abrir a interface web:
+
+```powershell
+python -m sistema_escolar.web
+```
+
+Se for a primeira vez, instale as dependencias:
+
+```powershell
+python -m pip install -r requirements.txt
+```
+
 O sistema salva os dados em `dados/alunos.json`.
 
 ## Como rodar os testes

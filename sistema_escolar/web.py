@@ -5,6 +5,7 @@ from statistics import mean
 
 from flask import Flask, flash, redirect, render_template, request, session, url_for
 
+from sistema_escolar.mcp_client import MCPDemoClient, MCPError
 from sistema_escolar.repository import AlunoRepository
 from sistema_escolar.service import SistemaEscolar
 
@@ -15,11 +16,18 @@ VALID_CREDENTIALS = {
 }
 
 
-def create_app(db_path: str = "dados/alunos.json") -> Flask:
+def create_app(
+    db_path: str = "dados/alunos.json",
+    mcp_client: MCPDemoClient | None = None,
+) -> Flask:
     app = Flask(__name__, template_folder="templates", static_folder="static")
     app.secret_key = "sistema-escolar-desenvolvimento"
 
     sistema = SistemaEscolar(AlunoRepository(db_path))
+    mcp_demo_client = mcp_client or MCPDemoClient.from_env()
+
+    def sincronizar_com_arquivo() -> None:
+        sistema.alunos = sistema.repository.carregar()
 
     def login_required(f):
         @wraps(f)
@@ -67,6 +75,8 @@ def create_app(db_path: str = "dados/alunos.json") -> Flask:
     @app.route("/", methods=["GET", "POST"])
     @login_required
     def index() -> str:
+        sincronizar_com_arquivo()
+
         if request.method == "POST":
             acao = request.form.get("acao", "")
 
@@ -101,6 +111,8 @@ def create_app(db_path: str = "dados/alunos.json") -> Flask:
     @app.route("/alunos/<matricula>")
     @login_required
     def detalhe_aluno(matricula: str) -> str:
+        sincronizar_com_arquivo()
+
         try:
             aluno = sistema.buscar_aluno(matricula)
         except ValueError as exc:
@@ -108,6 +120,23 @@ def create_app(db_path: str = "dados/alunos.json") -> Flask:
             return redirect(url_for("index"))
 
         return render_template("aluno.html", aluno=aluno)
+
+    @app.route("/mcp-demo")
+    @login_required
+    def mcp_demo() -> str:
+        tools = []
+        erro = None
+        try:
+            tools = mcp_demo_client.list_tools(limit=8)
+        except MCPError as exc:
+            erro = str(exc)
+
+        return render_template(
+            "mcp_demo.html",
+            tools=tools,
+            erro=erro,
+            endpoint=mcp_demo_client.endpoint,
+        )
 
     return app
 

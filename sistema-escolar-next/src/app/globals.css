@@ -1,0 +1,400 @@
+@import "tailwindcss";
+
+:root {
+  --background: #f5f1ea;
+  --foreground: #171312;
+  --muted: #6d6158;
+  --surface: rgba(255, 252, 246, 0.88);
+  --border: rgba(58, 47, 41, 0.12);
+  --accent: #0f766e;
+  --accent-strong: #115e59;
+  --accent-soft: #d6f1ee;
+  --danger: #b42318;
+  --success: #1d7a3d;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  min-height: 100%;
+  background:
+    radial-gradient(circle at top left, rgba(15, 118, 110, 0.16), transparent 35%),
+    radial-gradient(circle at right 20%, rgba(180, 35, 24, 0.08), transparent 24%),
+    var(--background);
+}
+
+body {
+  color: var(--foreground);
+  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+  margin: 0;
+  min-height: 100vh;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+.app-shell {
+  width: min(1160px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 32px 0 56px;
+}
+
+.centered-shell {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+}
+
+.topbar,
+.panel,
+.auth-card,
+.stat-card,
+.student-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  box-shadow: 0 16px 48px rgba(34, 28, 23, 0.08);
+  backdrop-filter: blur(12px);
+}
+
+.topbar {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 24px;
+  border-radius: 28px;
+  margin-bottom: 20px;
+}
+
+.topbar.compact {
+  margin-bottom: 16px;
+}
+
+.eyebrow,
+.auth-badge,
+.section-label {
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  font-size: 0.75rem;
+  color: var(--accent-strong);
+  font-weight: 700;
+}
+
+.subtitle,
+.auth-copy,
+.auth-hint,
+.student-meta,
+.empty-state,
+.detail-stack span,
+.student-metrics span,
+.detail-line {
+  color: var(--muted);
+}
+
+.notice {
+  border-radius: 18px;
+  padding: 14px 16px;
+  margin-bottom: 18px;
+  border: 1px solid transparent;
+}
+
+.notice-error {
+  background: #fff1f0;
+  color: var(--danger);
+  border-color: rgba(180, 35, 24, 0.16);
+}
+
+.notice-success {
+  background: #ecfdf3;
+  color: var(--success);
+  border-color: rgba(29, 122, 61, 0.16);
+}
+
+.stats-grid,
+.panel-grid,
+.student-grid {
+  display: grid;
+  gap: 16px;
+}
+
+.stats-grid {
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  margin-bottom: 20px;
+}
+
+.panel-grid {
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  margin-bottom: 20px;
+}
+
+.detail-grid {
+  grid-template-columns: 1.1fr 0.9fr;
+}
+
+.panel,
+.auth-card,
+.student-card {
+  border-radius: 28px;
+}
+
+.panel,
+.auth-card {
+  padding: 24px;
+}
+
+.stat-card {
+  padding: 20px 22px;
+  border-radius: 22px;
+}
+
+.stat-card span,
+.student-metrics span,
+.detail-stack span {
+  display: block;
+  font-size: 0.84rem;
+  margin-bottom: 4px;
+}
+
+.stat-card strong {
+  font-size: 2rem;
+}
+
+.panel-title {
+  margin-bottom: 18px;
+}
+
+.panel-title h2,
+.topbar h1,
+.auth-card h1 {
+  margin: 6px 0 0;
+  letter-spacing: -0.03em;
+}
+
+.stack-form,
+.auth-form {
+  display: grid;
+  gap: 14px;
+}
+
+.stack-form label,
+.auth-form label {
+  display: grid;
+  gap: 6px;
+  color: var(--foreground);
+  font-weight: 600;
+}
+
+.stack-form input,
+.auth-form input {
+  border-radius: 16px;
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.72);
+  padding: 14px 16px;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.stack-form input:focus,
+.auth-form input:focus {
+  border-color: rgba(15, 118, 110, 0.35);
+  box-shadow: 0 0 0 4px rgba(15, 118, 110, 0.12);
+}
+
+.primary-button,
+.secondary-button,
+.link-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  padding: 13px 18px;
+  font-weight: 700;
+  border: 1px solid transparent;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.primary-button {
+  background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+  color: white;
+  box-shadow: 0 12px 24px rgba(15, 118, 110, 0.22);
+}
+
+.secondary-button {
+  background: rgba(255, 255, 255, 0.72);
+  border-color: var(--border);
+}
+
+.link-button {
+  width: fit-content;
+}
+
+.primary-button:hover,
+.secondary-button:hover,
+.link-button:hover {
+  transform: translateY(-1px);
+}
+
+.student-grid {
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+}
+
+.student-card {
+  padding: 18px;
+}
+
+.student-card-head {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.student-name {
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.status-pill {
+  border-radius: 999px;
+  padding: 6px 10px;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.status-ok {
+  background: var(--accent-soft);
+  color: var(--accent-strong);
+}
+
+.status-warn {
+  background: #ffedd5;
+  color: #9a3412;
+}
+
+.student-metrics,
+.detail-stack {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin: 18px 0;
+}
+
+.student-metrics strong,
+.detail-stack strong {
+  display: block;
+  font-size: 1.4rem;
+}
+
+.grade-list,
+.notes-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 12px;
+}
+
+.grade-list li,
+.notes-list li {
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.6);
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.auth-shell {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+}
+
+.auth-card {
+  width: min(100%, 480px);
+}
+
+.auth-card h1 {
+  font-size: 2.4rem;
+}
+
+.auth-copy {
+  line-height: 1.7;
+  margin-bottom: 18px;
+}
+
+.auth-hint {
+  margin-top: 16px;
+  font-size: 0.92rem;
+}
+
+.centered-panel {
+  text-align: center;
+  display: grid;
+  justify-items: center;
+  gap: 14px;
+}
+
+.compact-form {
+  margin-top: 14px;
+}
+
+.empty-state,
+.detail-line,
+.subtitle {
+  line-height: 1.7;
+}
+
+.text-link {
+  color: var(--accent-strong);
+  font-weight: 700;
+}
+
+@media (max-width: 720px) {
+  .app-shell {
+    width: min(100% - 20px, 1160px);
+    padding-top: 18px;
+  }
+
+  .topbar,
+  .panel,
+  .auth-card,
+  .student-card,
+  .stat-card {
+    border-radius: 22px;
+  }
+
+  .topbar,
+  .student-card-head {
+    grid-template-columns: 1fr;
+    flex-direction: column;
+  }
+
+  .detail-grid,
+  .student-metrics,
+  .detail-stack {
+    grid-template-columns: 1fr;
+  }
+
+  .auth-card h1 {
+    font-size: 2rem;
+  }
+}

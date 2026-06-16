@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block title %}Demo MCP | Sistema Escolar{% endblock %}
+
+{% block headline %}Integracao didatica com MCP publico.{% endblock %}
+{% block subtitle %}Esta tela faz handshake MCP e lista ferramentas disponiveis em um servidor externo.{% endblock %}
+
+{% block content %}
+<section class="panel">
+    <div class="panel-head">
+        <div>
+            <span class="section-label">MCP</span>
+            <h2>Ferramentas do servidor</h2>
+        </div>
+    </div>
+
+    <p class="detail-line">Endpoint configurado: <strong>{{ endpoint }}</strong></p>
+
+    {% if erro %}
+        <div class="flash flash-error">{{ erro }}</div>
+        <p class="detail-line">
+            Dica: defina a variavel de ambiente <strong>MCP_DEMO_URL</strong> com um endpoint MCP HTTP publico valido.
+        </p>
+    {% elif tools %}
+        <ul class="notes-list">
+            {% for tool in tools %}
+                <li>
+                    <strong>{{ tool.name }}</strong>
+                    {% if tool.description %}
+                        <div class="detail-line">{{ tool.description }}</div>
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p class="empty-state">O servidor MCP nao retornou ferramentas.</p>
+    {% endif %}
+
+    <div class="actions-row">
+        <a class="button-secondary" href="{{ url_for('index') }}">Voltar ao painel</a>
+    </div>
+</section>
+{% endblock %}

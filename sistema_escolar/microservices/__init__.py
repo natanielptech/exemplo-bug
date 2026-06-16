@@ -1,0 +1,1 @@
+"""Microservices do sistema escolar."""
